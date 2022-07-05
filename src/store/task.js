@@ -23,7 +23,7 @@ const taskSlice = createSlice({name: "task", initialState, reducers: {
         state.isLoading = false;
     },
     create(state, action) {
-        state.entities = [ {...action.payload}, ...state.entities ]
+        state.entities.push(action.payload)
     },
 }})
 const {actions, reducer: taskReducer} = taskSlice;
@@ -47,9 +47,14 @@ export const completeTask = (id) => (dispatch) => {
 export function titleChanged(id) {
     return update({ id, title: `New title for ${id}`})
 };
-export function taskCreated() {
-    // todosService.create(newTask);
-    return create({id: Date.now(), title: "New Task", completed: false}) 
+export const taskCreated = (newTask) => async (dispatch) => {
+    try {
+        const data = await todosService.create(newTask)
+        dispatch(create(data))
+    } catch (error) {
+        dispatch(taskReaquestFailed())
+        dispatch(setError(error.message))
+    } 
 }
 export function taskRemove(id) {
     return remove({ id })

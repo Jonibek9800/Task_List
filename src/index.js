@@ -31,7 +31,7 @@ const changeTitle = (taskId) => {
     dispatch(taskRemove(id))
   }
   const createTask = () => {
-    dispatch(taskCreated())
+    dispatch(taskCreated({title: "New Task", completed: false}))
   }
 
 if (isLoading) {
